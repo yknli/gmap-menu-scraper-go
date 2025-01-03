@@ -67,37 +67,26 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("scrolling to photos header...")
-
 	_, err = driver.ExecuteScript("arguments[0].scrollIntoView(true);", []interface{}{photosHeader})
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("finding next photo...")
 
 	nextButton, err := FindElement(driver, selenium.ByXPATH, `//button[@aria-label="下一張相片"]`)
 	if err != nil {
 		time.Sleep(10 * time.Second)
 		panic(err)
 	}
-
-	fmt.Println("clicking next button...")
-
 	_, err = driver.ExecuteScript("arguments[0].click();", []interface{}{nextButton})
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println("finding menu button...")
 
 	menuButton, err := FindElement(driver, selenium.ByXPATH, `//button[@aria-label="菜單"]/img`)
 	if err != nil {
 		time.Sleep(10 * time.Second)
 		panic(err)
 	}
-
-	fmt.Println("clicking menu button...")
 
 	err = menuButton.Click()
 	if err != nil {
@@ -118,7 +107,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("photo directory for the restaurant successfully created: %s/%s\n", photoDir, restaurantName)
 
 	for _, photoDiv := range menuPhotoDivs {
 
@@ -131,7 +119,6 @@ func main() {
 				}
 				time.Sleep(1 * time.Second)
 			} else {
-				time.Sleep(10 * time.Second)
 				panic(err)
 			}
 		}
@@ -148,6 +135,8 @@ func main() {
 		}
 		urlEndIndex := strings.Index(photoDivStyle, `");`)
 		photoURL := photoDivStyle[urlStartIndex:urlEndIndex]
+		fmt.Println(photoURL)
+
 		photoName := fmt.Sprintf("%s/%s/%s.jpg", photoDir, restaurantName, photoURL[strings.LastIndex(photoURL, "/")+1:])
 		resp, err := http.Get(photoURL)
 		if err != nil {
@@ -164,7 +153,6 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("photo successfully downloaded: %s\n", photoName)
 	}
 
 	endTime := time.Now()
